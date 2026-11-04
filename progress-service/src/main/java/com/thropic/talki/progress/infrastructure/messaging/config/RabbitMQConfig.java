@@ -1,5 +1,6 @@
 package com.thropic.talki.progress.infrastructure.messaging.config;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.amqp.core.*;
@@ -45,6 +46,9 @@ public class RabbitMQConfig {
     public Jackson2JsonMessageConverter messageConverter() {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
+        // Lector tolerante: scoring.completed publica más campos (traceId, version, scores...)
+        // de los que necesita esta proyección; no deben hacer descartar el evento.
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         return new Jackson2JsonMessageConverter(mapper);
     }
 
