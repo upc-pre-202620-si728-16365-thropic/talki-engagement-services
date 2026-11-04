@@ -14,11 +14,8 @@ import java.util.List;
  * Configuración de OpenAPI 3 para el progress-service.
  *
  * Publica la especificación en /v3/api-docs y la UI en /swagger-ui.html.
- * Cumple el criterio "RESTful API con documentación de cada servicio" de la
- * rúbrica TP1 del curso SI657. El servicio implementa el bounded context
- * Progress & Metrics (DDD) con separación CQRS — comandos actualizan la
- * vista materializada al consumir scoring.completed; queries entregan
- * dashboards de progreso histórico al frontend.
+ * La URL relativa permite usar "Try it out" en cualquier puerto; la URL del
+ * ambiente publicado se agrega cuando exista.
  */
 @Configuration
 public class OpenApiConfig {
@@ -28,21 +25,19 @@ public class OpenApiConfig {
         return new OpenAPI()
                 .info(new Info()
                         .title("Talki — Progress Service API")
-                        .description("Microservicio del bounded context Progress & Metrics (DDD) del producto "
-                                + "Talki. Aplica el patrón CQRS: el comando se ejecuta al consumir "
-                                + "scoring.completed del exchange talki.events y actualiza la vista "
-                                + "materializada UserProgress; las queries del frontend Angular consultan "
-                                + "estadísticas históricas y comparativas de sesiones sin contención con "
-                                + "el camino de escritura.")
+                        .description("Microservicio del bounded context Progress & Adaptation del producto Talki. "
+                                + "Consume scoring.completed del exchange talki.events y actualiza el resumen del "
+                                + "estudiante, una sola vez por sesión. GET /v1/progress/dashboard consulta ese "
+                                + "resumen para el cliente web.")
                         .version("v1")
                         .contact(new Contact()
                                 .name("Thropic — Equipo Talki")
-                                .url("https://github.com/upc-pre-202601-si657-7940-thropic"))
+                                .url("https://github.com/upc-pre-202620-si728-16365-thropic"))
                         .license(new License()
-                                .name("Académico — UPC SI657 2026-10")))
+                                .name("Académico — UPC 1ASI0728 2026-20")))
                 .servers(List.of(
-                        new Server().url("http://localhost:8089").description("Local (perfil dev)"),
-                        new Server().url("https://api.talki.lat").description("Producción (Railway)")
+                        new Server().url("/").description("Servidor actual"),
+                        new Server().url("http://localhost:8089").description("Local, puerto por defecto")
                 ));
     }
 }
